@@ -1,0 +1,38 @@
+#!/bin/bash
+PASS_ENV=(
+    MIX_ENV
+)
+
+ARGS=""
+
+while [ -n "$1" ]; do 
+    [[ "${1}" =~ \ |\' ]] && \
+        ARGS="$ARGS \'${1}\'" || \
+        ARGS="$ARGS ${1}";
+    shift;
+done
+
+ROOT_DIR=$(git rev-parse --show-toplevel)
+[ -z "$ROOT_DIR" ] && echo "Cannot find git root directory" && exit 1
+ 
+SUB_DIR="${PWD#$ROOT_DIR}"
+
+[ "$PWD" == "$SUB_DIR" ] && echo "Invalid directory" && exit 1
+
+CONTAINER_HASH=$(echo "${EX_VERSION}${ROOT_DIR}" | shasum | head -c 16)
+CONTAINER_NAME="elixir_${CONTAINER_HASH}"
+
+
+docker ps -f "name=${CONTAINER_NAME}" -q | grep -q . || {
+  docker container list -f "name=${CONTAINER_NAME}" -q -a | grep -q . \
+    && docker container start "${CONTAINER_NAME}" \
+    || docker run \
+        -v $ROOT_DIR:/directory \
+        --network "host" \
+        --name "${CONTAINER_NAME}" \
+        -d ${EX_IMAGE}
+}
+
+ENV=$(IFS='|' ; env | grep -E "${PASS_ENV[*]}")
+
+docker exec -it $CONTAINER_NAME /bin/sh -c "cd /directory/${SUB_DIR} && ${ENV} ${ARGS}"

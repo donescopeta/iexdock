@@ -1,0 +1,10 @@
+set_elixir(){
+    alias iex="${*} iexdock_elixir iex"
+    alias mix="${*} iexdock_elixir mix"
+}
+
+while read EX_CONFIG ; do
+    declare ${EX_CONFIG}
+    alias "e1ixir_${NAME#elixir_}"="set_elixir ${EX_CONFIG}"
+done <~/.iexdock/elixir_images
+
