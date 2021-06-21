@@ -5,6 +5,7 @@ set_elixir(){
 
 while read EX_CONFIG ; do
     declare ${EX_CONFIG}
-    alias "e1ixir_${NAME#elixir_}"="set_elixir ${EX_CONFIG}"
+    alias "e1ixir${NAME#elixir_}"="set_elixir ${EX_CONFIG}"
 done <~/.iexdock/elixir_images
 
+alias e1ixir="set_elixir"

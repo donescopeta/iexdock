@@ -1,4 +1,5 @@
 #!/bin/bash
+
 PASS_ENV=(
     MIX_ENV
 )
@@ -19,9 +20,14 @@ SUB_DIR="${PWD#$ROOT_DIR}"
 
 [ "$PWD" == "$SUB_DIR" ] && echo "Invalid directory" && exit 1
 
+[ -z "$EX_VERSION" ] && {
+    read TOOL ASDF_VERSION < <(grep elixir ${ROOT_DIR}/.tool-versions )
+    declare $(grep "NAME=elixir_${ASDF_VERSION}" ~/.iexdock/elixir_images) > /dev/null
+    [ -z "$EX_VERSION" ] && echo "Elixir version unspecified" && exit 1
+}
+
 CONTAINER_HASH=$(echo "${EX_VERSION}${ROOT_DIR}" | shasum | head -c 16)
 CONTAINER_NAME="elixir_${CONTAINER_HASH}"
-
 
 docker ps -f "name=${CONTAINER_NAME}" -q | grep -q . || {
   docker container list -f "name=${CONTAINER_NAME}" -q -a | grep -q . \
@@ -30,7 +36,8 @@ docker ps -f "name=${CONTAINER_NAME}" -q | grep -q . || {
         -v $ROOT_DIR:/directory \
         --network "host" \
         --name "${CONTAINER_NAME}" \
-        -d ${EX_IMAGE}
+        -d ${EX_IMAGE} \
+        || exit 1
 }
 
 ENV=$(IFS='|' ; env | grep -E "${PASS_ENV[*]}")
