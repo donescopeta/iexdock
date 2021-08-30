@@ -4,7 +4,7 @@ PASS_ENV=(
     MIX_ENV
 )
 
-ARGS=""
+ARGS="${BINARY}"
 
 while [ -n "$1" ]; do 
     [[ "${1}" =~ \ |\' ]] && \

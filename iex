@@ -1,0 +1,3 @@
+#!/bin/bash
+BINARY=iex
+source iexdock_elixir

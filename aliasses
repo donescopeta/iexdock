@@ -1,6 +1,6 @@
 set_elixir(){
-    alias iex="${*} iexdock_elixir iex"
-    alias mix="${*} iexdock_elixir mix"
+    [[ "${*} =~ "=" ]] && export ${*}
+    export PATH=${HOME}/.iexdock:$PATH
 }
 
 while read EX_CONFIG ; do
