@@ -1,5 +1,5 @@
 set_elixir(){
-    [[ "${*} =~ "=" ]] && export ${*}
+    [[ "${*}" =~ "=" ]] && export ${*}
     export PATH=${HOME}/.iexdock:$PATH
 }
 
