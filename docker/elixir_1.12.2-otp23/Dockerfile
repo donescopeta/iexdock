@@ -2,9 +2,14 @@ FROM erlang:23
 
 # elixir expects utf8.
 ENV ELIXIR_VERSION="v1.12.2" \
-	LANG=C.UTF-8
+	LANG=C.UTF-8 \
+	PROTOC_VERSION=3.15.8
 
 RUN set -xe \
+	&& PB_REL="https://github.com/protocolbuffers/protobuf/releases" \
+	&& curl -fSL -o ./protoc.zip "$PB_REL/download/v3.15.8/protoc-${PROTOC_VERSION}-linux-x86_64.zip" \
+	&& unzip ./protoc.zip -d /usr \
+	&& rm protoc.zip \
 	&& ELIXIR_DOWNLOAD_URL="https://github.com/elixir-lang/elixir/archive/${ELIXIR_VERSION}.tar.gz" \
 	&& ELIXIR_DOWNLOAD_SHA256="701006d1279225fc42f15c8d3f39906db127ddcc95373d34d8d160993356b15c" \
 	&& curl -fSL -o elixir-src.tar.gz $ELIXIR_DOWNLOAD_URL \
@@ -15,7 +20,8 @@ RUN set -xe \
 	&& cd /usr/local/src/elixir \
 	&& make install clean \
 	&& mix local.hex --force \
-   	&& mix local.rebar --force
+   	&& mix local.rebar --force \
+   	&& mix escript.install hex protobuf --force
 	
 CMD ["/bin/sleep", "3600"]
 
