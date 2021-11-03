@@ -42,4 +42,4 @@ docker ps -f "name=${CONTAINER_NAME}" -q | grep -q . || {
 
 ENV=$(IFS='|' ; env | grep -E "${PASS_ENV[*]}")
 
-docker exec -it $CONTAINER_NAME /bin/sh -c "export PATH=\$PATH:/root/.mix/escripts; cd /directory/${SUB_DIR} && ${ENV} ${ARGS}"
+docker exec -u $UID -it $CONTAINER_NAME /bin/sh -c "export PATH=\$PATH:/root/.mix/escripts; cd /directory/${SUB_DIR} && ${ENV} ${ARGS}"

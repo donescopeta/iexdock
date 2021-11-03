@@ -4,6 +4,10 @@ FROM erlang:23
 ENV ELIXIR_VERSION="v1.12.2" \
 	LANG=C.UTF-8 \
 	PROTOC_VERSION=3.15.8
+	
+ARG UID=1000
+
+RUN useradd -d /home/iex_user -ms /bin/bash -g root -G sudo -u $UID iex_user
 
 RUN set -xe \
 	&& PB_REL="https://github.com/protocolbuffers/protobuf/releases" \

@@ -1,2 +1,2 @@
 #!/bin/bash
-docker build $HOME/.iexdock/docker/$1 -t $1
+docker build --build-arg UID=$UID $HOME/.iexdock/docker/$1 -t $1

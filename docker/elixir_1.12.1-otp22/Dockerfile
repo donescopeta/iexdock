@@ -4,6 +4,10 @@ FROM erlang:22
 ENV ELIXIR_VERSION="v1.12.1" \
 	LANG=C.UTF-8
 
+ARG UID=1000
+
+RUN useradd -d /home/iex_user -ms /bin/bash -g root -G sudo -u $UID iex_user
+
 RUN set -xe \
 	&& ELIXIR_DOWNLOAD_URL="https://github.com/elixir-lang/elixir/archive/${ELIXIR_VERSION}.tar.gz" \
 	&& ELIXIR_DOWNLOAD_SHA256="96167d614b9c483efc54bd7898c3eea4768569a77dd8892ada85d7800d5e3ea4" \
