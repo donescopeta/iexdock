@@ -18,6 +18,10 @@ RUN set -xe \
 	&& rm elixir-src.tar.gz \
 	&& cd /usr/local/src/elixir \
 	&& make install clean \
+
+USER iex_user
+
+RUN set -xe \
 	&& mix local.hex --force \
    	&& mix local.rebar --force
 	
