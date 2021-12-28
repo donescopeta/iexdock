@@ -33,7 +33,7 @@ docker ps -f "name=${CONTAINER_NAME}" -q | grep -q . || {
   docker container list -f "name=${CONTAINER_NAME}" -q -a | grep -q . \
     && docker container start "${CONTAINER_NAME}" \
     || docker run \
-        -v $ROOT_DIR:/directory \
+        -v $ROOT_DIR:/home/iex_user/directory \
         --network "host" \
         --name "${CONTAINER_NAME}" \
         -d ${EX_IMAGE} \
@@ -42,4 +42,4 @@ docker ps -f "name=${CONTAINER_NAME}" -q | grep -q . || {
 
 ENV=$(IFS='|' ; env | grep -E "${PASS_ENV[*]}")
 
-docker exec -u $UID -it $CONTAINER_NAME /bin/sh -c "export PATH=\$PATH:\$HOME/.mix/escripts; cd /directory/${SUB_DIR} && ${ENV} ${ARGS}"
+docker exec -u $UID -it $CONTAINER_NAME /bin/sh -c "export PATH=\$PATH:\$HOME/.mix/escripts; cd /home/iex_user/directory/${SUB_DIR} && ${ENV} ${ARGS}"
