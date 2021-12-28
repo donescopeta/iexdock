@@ -18,7 +18,11 @@ RUN set -xe \
 	&& tar -xzC /usr/local/src/elixir --strip-components=1 -f elixir-src.tar.gz \
 	&& rm elixir-src.tar.gz \
 	&& cd /usr/local/src/elixir \
-	&& make install clean \
+	&& make install clean
+
+USER iex_user
+
+RUN set -xe \
 	&& mix local.hex --force \
    	&& mix local.rebar --force \
    	&& mix escript.install hex protobuf --force
