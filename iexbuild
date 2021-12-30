@@ -1,13 +1,23 @@
 #!/bin/bash
 
+build(){
+    docker build --build-arg UID=$UID $HOME/.iexdock/docker/$1 -t $1 --no-cache
+}
+
 [ -z "$*" ] && {
     ls -1 $HOME/.iexdock/docker/$1
     exit 0
 }
 
 [ "$1" == "rebuild" ] && {
-    docker image rm --force $(docker images | grep ^elixir | sed -E 's/^([^ ]+).*/\1/')
+    IMAGES=$(docker images | grep ^elixir | sed -E 's/^([^ ]+).*/\1/')
+    docker image rm --force %{IMAGES}
+
+    for IMAGE in ${IMAGES} ; do
+        build ${IMAGE}
+    done
+
     exit 0
 }
 
-docker build --build-arg UID=$UID $HOME/.iexdock/docker/$1 -t $1 --no-cache
+build ${1}
